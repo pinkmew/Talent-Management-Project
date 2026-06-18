@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-pencil-square me-2 text-primary"></i>{{ title }}: {{ employee.full_name }}</h2>
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-4">
+    <form method="POST" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="row g-3">
+        <div class="col-md-3">
+          {{ form.review_date.label(class="form-label") }}
+          {{ form.review_date(class="form-control" + (" is-invalid" if form.review_date.errors else "")) }}
+          {% for e in form.review_date.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-3">
+          {{ form.performance_rating.label(class="form-label") }}
+          {{ form.performance_rating(class="form-select" + (" is-invalid" if form.performance_rating.errors else "")) }}
+          {% for e in form.performance_rating.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-3">
+          {{ form.potential_rating.label(class="form-label") }}
+          {{ form.potential_rating(class="form-select" + (" is-invalid" if form.potential_rating.errors else "")) }}
+          {% for e in form.potential_rating.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-3">
+          {{ form.status.label(class="form-label") }}
+          {{ form.status(class="form-select") }}
+        </div>
+        <div class="col-12">
+          {{ form.development_action.label(class="form-label") }}
+          {{ form.development_action(class="form-control", rows=4) }}
+        </div>
+      </div>
+      <div class="mt-4 d-flex gap-2">
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('employees.detail', employee_id=employee.id) }}" class="btn btn-outline-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2><i class="bi bi-person-lines-fill me-2 text-primary"></i>{{ title }}</h2>
+  {% if current_user.is_manager() %}
+  <a href="{{ url_for('employees.add') }}" class="btn btn-primary">
+    <i class="bi bi-plus-lg me-1"></i>Add Employee
+  </a>
+  {% endif %}
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Emp No.</th>
+            <th>Name</th>
+            <th>Business Area</th>
+            <th>Role</th>
+            <th>Grade</th>
+            <th>Talent Segment</th>
+            <th>Readiness</th>
+            <th>Flight Risk</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for emp in employees %}
+          <tr>
+            <td><code>{{ emp.employee_number }}</code></td>
+            <td>
+              <a href="{{ url_for('employees.detail', employee_id=emp.id) }}" class="fw-semibold text-decoration-none">
+                {{ emp.full_name }}
+              </a>
+            </td>
+            <td>{{ emp.business_area }}</td>
+            <td>{{ emp.current_role }}</td>
+            <td>{{ emp.grade }}</td>
+            <td>
+              {% set seg_class = {
+                'High Potential':'success','Strong Performer':'primary',
+                'Core Performer':'info','Developing':'warning','At Risk':'danger'
+              } %}
+              <span class="badge bg-{{ seg_class.get(emp.talent_segment, 'secondary') }}">
+                {{ emp.talent_segment }}
+              </span>
+            </td>
+            <td>{{ emp.readiness_level }}</td>
+            <td>
+              {% set fr_class = {'High':'danger','Medium':'warning','Low':'success'} %}
+              <span class="badge bg-{{ fr_class.get(emp.flight_risk, 'secondary') }}">
+                {{ emp.flight_risk }}
+              </span>
+            </td>
+            <td class="text-end">
+              <a href="{{ url_for('employees.detail', employee_id=emp.id) }}"
+                 class="btn btn-sm btn-outline-secondary me-1" title="View">
+                <i class="bi bi-eye"></i>
+              </a>
+              {% if current_user.is_manager() %}
+              <a href="{{ url_for('employees.edit', employee_id=emp.id) }}"
+                 class="btn btn-sm btn-outline-primary me-1" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </a>
+              {% endif %}
+              {% if current_user.is_admin() %}
+              <button type="button" class="btn btn-sm btn-outline-danger"
+                      data-bs-toggle="modal" data-bs-target="#deleteModal{{ emp.id }}" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+              <!-- Confirm delete modal -->
+              <div class="modal fade" id="deleteModal{{ emp.id }}" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h6 class="modal-title">Confirm Delete</h6>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      Delete <strong>{{ emp.full_name }}</strong>? This cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <form method="POST" action="{{ url_for('employees.delete', employee_id=emp.id) }}">
+                        {{ csrf_token() | safe if csrf_token is defined else '' }}
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="8" class="text-center py-4 text-muted">No employees found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

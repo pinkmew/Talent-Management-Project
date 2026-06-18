@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10 col-lg-8">
+
+    <div class="row g-4 mt-3">
+
+      <!-- Login form -->
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <i class="bi bi-people-fill text-primary" style="font-size:2.5rem;"></i>
+              <h4 class="fw-bold mt-2">Talent Portal</h4>
+              <p class="text-muted small">Fujitsu Internal — Authorised Users Only</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('auth.login') }}" novalidate>
+              {{ form.hidden_tag() }}  {# CSRF token — prevents cross-site request forgery #}
+
+              <div class="mb-3">
+                {{ form.email.label(class="form-label fw-semibold") }}
+                {{ form.email(
+                     class="form-control" + (" is-invalid" if form.email.errors else ""),
+                     placeholder="you@example.com",
+                     autocomplete="email"
+                   ) }}
+                {% for error in form.email.errors %}
+                  <div class="invalid-feedback">
+                    <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                  </div>
+                {% endfor %}
+              </div>
+
+              <div class="mb-3">
+                {{ form.password.label(class="form-label fw-semibold") }}
+                {{ form.password(
+                     class="form-control" + (" is-invalid" if form.password.errors else ""),
+                     placeholder="Your password",
+                     autocomplete="current-password"
+                   ) }}
+                {% for error in form.password.errors %}
+                  <div class="invalid-feedback">
+                    <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                  </div>
+                {% endfor %}
+              </div>
+
+              <div class="d-grid mt-4">
+                {{ form.submit(class="btn btn-primary btn-lg") }}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo accounts panel for assessment / marking -->
+      <div class="col-md-6">
+        <div class="card border-warning shadow-sm h-100">
+          <div class="card-header bg-warning bg-opacity-10 border-warning">
+            <h6 class="mb-0 fw-semibold">
+              <i class="bi bi-info-circle me-2 text-warning"></i>Assessment Demo Accounts
+            </h6>
+          </div>
+          <div class="card-body p-4">
+            <p class="text-muted small mb-3">
+              Use these accounts to explore the portal with different permission levels.
+            </p>
+
+            <div class="mb-3 p-3 bg-danger bg-opacity-10 rounded border border-danger border-opacity-25">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-danger mb-1">Admin</span>
+                <small class="text-muted">Full access</small>
+              </div>
+              <div class="small"><strong>Email:</strong> admin@example.com</div>
+              <div class="small"><strong>Password:</strong> Password123!</div>
+              <div class="text-muted" style="font-size:0.75rem;">Can create, edit, delete, view audit log</div>
+            </div>
+
+            <div class="mb-3 p-3 bg-warning bg-opacity-10 rounded border border-warning border-opacity-25">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-warning text-dark mb-1">Manager</span>
+                <small class="text-muted">Read + create/edit</small>
+              </div>
+              <div class="small"><strong>Email:</strong> manager@example.com</div>
+              <div class="small"><strong>Password:</strong> Password123!</div>
+              <div class="text-muted" style="font-size:0.75rem;">Can add employees, create reviews — cannot delete</div>
+            </div>
+
+            <div class="mb-3 p-3 bg-secondary bg-opacity-10 rounded border border-secondary border-opacity-25">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-secondary mb-1">Viewer</span>
+                <small class="text-muted">Read only</small>
+              </div>
+              <div class="small"><strong>Email:</strong> viewer@example.com</div>
+              <div class="small"><strong>Password:</strong> Password123!</div>
+              <div class="text-muted" style="font-size:0.75rem;">Can view dashboard, employees, projects only</div>
+            </div>
+
+            <div class="alert alert-info py-2 mb-0 small">
+              <i class="bi bi-shield-check me-1"></i>
+              To create a new account, log in as Admin and use
+              <strong>Admin &rarr; Create User</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

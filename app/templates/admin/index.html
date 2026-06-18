@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-shield-lock me-2 text-primary"></i>{{ title }}</h2>
+
+<div class="row g-4 mb-4">
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-0 shadow-sm text-center py-3">
+      <div class="fs-1 fw-bold text-primary">{{ stats.total_users }}</div>
+      <div class="text-muted small">Registered Users</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-0 shadow-sm text-center py-3">
+      <div class="fs-1 fw-bold text-success">{{ stats.total_employees }}</div>
+      <div class="text-muted small">Employees</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-0 shadow-sm text-center py-3">
+      <div class="fs-1 fw-bold text-info">{{ stats.total_projects }}</div>
+      <div class="text-muted small">Projects</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-0 shadow-sm text-center py-3">
+      <div class="fs-1 fw-bold text-warning">{{ stats.open_reviews }}</div>
+      <div class="text-muted small">Open Reviews</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <span class="fw-semibold">Recent Audit Activity</span>
+        <a href="{{ url_for('admin.audit_log') }}" class="btn btn-sm btn-outline-secondary">View All</a>
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead class="table-light">
+            <tr><th>Time</th><th>User</th><th>Action</th><th>Table</th></tr>
+          </thead>
+          <tbody>
+            {% for log in recent_logs %}
+            <tr>
+              <td class="small text-muted">{{ log.timestamp.strftime('%d/%m %H:%M') }}</td>
+              <td class="small">{{ log.user.username if log.user else 'System' }}</td>
+              <td>
+                {% set ac = {'CREATE':'success','UPDATE':'primary','DELETE':'danger'} %}
+                <span class="badge bg-{{ ac.get(log.action_type,'secondary') }}">{{ log.action_type }}</span>
+              </td>
+              <td class="small">{{ log.table_changed }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="text-muted small py-3 text-center">No audit entries.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold">Quick Links</div>
+      <div class="list-group list-group-flush">
+        <a href="{{ url_for('auth.register') }}" class="list-group-item list-group-item-action">
+          <i class="bi bi-person-plus me-2 text-primary"></i>Create New User
+        </a>
+        <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action">
+          <i class="bi bi-person-gear me-2 text-primary"></i>Manage Users
+        </a>
+        <a href="{{ url_for('admin.audit_log') }}" class="list-group-item list-group-item-action">
+          <i class="bi bi-journal-text me-2 text-primary"></i>Full Audit Log
+        </a>
+        <a href="{{ url_for('employees.add') }}" class="list-group-item list-group-item-action">
+          <i class="bi bi-person-plus me-2 text-success"></i>Add Employee
+        </a>
+        <a href="{{ url_for('projects.add') }}" class="list-group-item list-group-item-action">
+          <i class="bi bi-plus-circle me-2 text-success"></i>Add Project
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

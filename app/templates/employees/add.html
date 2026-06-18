@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-person-plus me-2 text-primary"></i>{{ title }}</h2>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-4">
+    <form method="POST" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="row g-3">
+        <div class="col-md-4">
+          {{ form.employee_number.label(class="form-label") }}
+          {{ form.employee_number(class="form-control" + (" is-invalid" if form.employee_number.errors else "")) }}
+          {% for e in form.employee_number.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-8">
+          {{ form.full_name.label(class="form-label") }}
+          {{ form.full_name(class="form-control" + (" is-invalid" if form.full_name.errors else "")) }}
+          {% for e in form.full_name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-6">
+          {{ form.business_area.label(class="form-label") }}
+          {{ form.business_area(class="form-control" + (" is-invalid" if form.business_area.errors else "")) }}
+          {% for e in form.business_area.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-6">
+          {{ form.current_role.label(class="form-label") }}
+          {{ form.current_role(class="form-control" + (" is-invalid" if form.current_role.errors else "")) }}
+          {% for e in form.current_role.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-4">
+          {{ form.grade.label(class="form-label") }}
+          {{ form.grade(class="form-select" + (" is-invalid" if form.grade.errors else "")) }}
+          {% for e in form.grade.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-4">
+          {{ form.talent_segment.label(class="form-label") }}
+          {{ form.talent_segment(class="form-select" + (" is-invalid" if form.talent_segment.errors else "")) }}
+          {% for e in form.talent_segment.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-4">
+          {{ form.readiness_level.label(class="form-label") }}
+          {{ form.readiness_level(class="form-select" + (" is-invalid" if form.readiness_level.errors else "")) }}
+          {% for e in form.readiness_level.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-4">
+          {{ form.flight_risk.label(class="form-label") }}
+          {{ form.flight_risk(class="form-select" + (" is-invalid" if form.flight_risk.errors else "")) }}
+          {% for e in form.flight_risk.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-12">
+          {{ form.future_role_aspiration.label(class="form-label") }}
+          {{ form.future_role_aspiration(class="form-control") }}
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('employees.index') }}" class="btn btn-outline-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2><i class="bi bi-person-gear me-2 text-primary"></i>{{ title }}</h2>
+  <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
+    <i class="bi bi-person-plus me-1"></i>Create User
+  </a>
+</div>
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-0">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Username</th><th>Email</th><th>Role</th><th>Business Area</th><th>Created</th></tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td class="fw-semibold">{{ u.username }}</td>
+          <td>{{ u.email }}</td>
+          <td>
+            {% set rc = {'admin':'danger','manager':'warning','viewer':'secondary'} %}
+            <span class="badge bg-{{ rc.get(u.role,'secondary') }}">{{ u.role }}</span>
+          </td>
+          <td>{{ u.business_area or '—' }}</td>
+          <td class="small text-muted">{{ u.created_at.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

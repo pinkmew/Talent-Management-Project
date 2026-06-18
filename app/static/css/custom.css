@@ -1,0 +1,72 @@
+/* custom.css — Fujitsu Talent Management Portal */
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main.container {
+  flex: 1;
+}
+
+/* Navbar active link underline */
+.navbar-nav .nav-link.active {
+  font-weight: 600;
+  border-bottom: 2px solid rgba(255,255,255,0.7);
+}
+
+/* Card hover lift on dashboard */
+.card {
+  transition: box-shadow 0.2s ease;
+}
+.card:hover {
+  box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.1) !important;
+}
+
+/* Table row hover */
+.table-hover tbody tr:hover {
+  background-color: rgba(13,110,253,.04);
+}
+
+/* Progress bar text */
+.progress-bar {
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* Alert auto-dismiss animation */
+.alert {
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Badge pill style */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Footer */
+.footer {
+  font-size: 0.82rem;
+}
+
+/* Form cards */
+.card .form-label {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Code elements */
+code {
+  background: #f1f3f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #d63384;
+}
