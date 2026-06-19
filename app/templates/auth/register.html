@@ -24,6 +24,7 @@
               {{ form.password.label(class="form-label") }}
               {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
               {% for e in form.password.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+              <div class="form-text">8+ characters with uppercase, number and special character.</div>
             </div>
             <div class="col-md-6">
               {{ form.confirm_password.label(class="form-label") }}
