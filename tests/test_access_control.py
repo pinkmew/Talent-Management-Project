@@ -1,11 +1,6 @@
 """
 tests/test_access_control.py — Role-based access control tests.
 
-Verifies that OWASP A01 (Broken Access Control) protections work:
-  - Unauthenticated users are redirected to /login
-  - Viewers cannot access admin or mutating endpoints
-  - Managers cannot access admin-only endpoints
-  - Admins can access everything
 """
 
 from tests.conftest import login

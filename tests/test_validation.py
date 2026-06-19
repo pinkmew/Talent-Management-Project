@@ -1,12 +1,6 @@
 """
 tests/test_validation.py — Input validation and security tests.
 
-Covers:
-  1. Allocation percentage 0-100 enforcement
-  2. Required employee fields
-  3. SQL injection-like input does not bypass auth
-  4. Protected routes redirect anonymous users
-  5. Invalid role access is blocked
 """
 
 from tests.conftest import login
@@ -18,8 +12,7 @@ class TestAllocationValidation:
     def test_allocation_above_100_rejected(self, client, seed_users,
                                            seed_employee, seed_project, app):
         """
-        An allocation_percentage > 100 must be rejected by the server-side
-        validator — even if a user bypasses the HTML max=100 attribute.
+        An allocation_percentage over 100 must be rejected by the server-side
         """
         login(client, 'admin@test.com', 'Password123!')
         resp = client.post('/allocations/add', data={
@@ -30,7 +23,7 @@ class TestAllocationValidation:
             'start_date': '2024-01-01',
             'end_date': '',
         }, follow_redirects=True)
-        # Server returns the form page with an error, not a redirect to index
+        # Server returns the form page with an error.
         assert resp.status_code == 200
         # Confirm no allocation was created in the database
         with app.app_context():
@@ -128,21 +121,13 @@ class TestSecurityValidation:
         """
         SQL injection attempt in the login form does not authenticate.
 
-        OWASP A03 — Injection:
-        The attack is blocked at two layers:
-          1. WTForms email validator rejects the malformed input before
-             the query runs (the email field must be a valid address).
-          2. Even if the validator were bypassed, SQLAlchemy ORM uses
-             parameterised queries so the literal string is never
-             interpreted as SQL syntax.
-
-        Either way, the attacker NEVER reaches the dashboard.
+    
         """
         resp = client.post('/login', data={
             'email': "' OR '1'='1",
             'password': "' OR '1'='1",
         }, follow_redirects=True)
-        # Critical: must NOT be on the dashboard — injection has not worked
+        # must not be on the dashboard — injection has not worked
         assert b'Total Employees' not in resp.data
         # Must still be on the login page
         assert b'Log In' in resp.data
@@ -214,16 +199,13 @@ class TestSecurityValidation:
             'flight_risk': 'Low',
             'future_role_aspiration': '',
         }, follow_redirects=True)
-        # The employee list must NOT contain the raw script tag —
-        # Jinja2 auto-escapes it to &lt;script&gt;
+        # The employee list must not contain the raw script tag.
+
         resp = client.get('/employees')
         assert b'<script>alert' not in resp.data
         assert b'&lt;script&gt;' in resp.data
 
     def test_password_strength_enforced(self, client, seed_users):
-        """
-        OWASP A07 — Weak password is rejected by server-side validation.
-        """
         login(client, 'admin@test.com', 'Password123!')
         resp = client.post('/register', data={
             'username': 'weakuser',

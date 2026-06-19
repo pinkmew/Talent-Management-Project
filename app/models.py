@@ -1,12 +1,6 @@
 """
 app/models.py — SQLAlchemy ORM models.
 
-All database interactions go through these ORM classes.  Using the ORM
-means queries are parameterised automatically, preventing SQL injection
-(OWASP A03: Injection mitigation).
-
-Relationships use foreign keys to enforce referential integrity between
-tables — a key database design requirement for this assessment.
 """
 
 from datetime import datetime, timezone
@@ -15,22 +9,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
 
 
-# ---------------------------------------------------------------------------
-# User loader — required by Flask-Login to reload the user from the session
-# ---------------------------------------------------------------------------
-@login_manager.user_loader
+# User loader
 def load_user(user_id: int):
     return User.query.get(int(user_id))
 
 
-# ---------------------------------------------------------------------------
+
 # User model
-# ---------------------------------------------------------------------------
+
 class User(UserMixin, db.Model):
     """
-    Represents a portal user.  Passwords are NEVER stored in plain text —
-    only a bcrypt-compatible Werkzeug hash is persisted.
-    (OWASP A02: Cryptographic Failures mitigation)
+    Represents a portal user.
     """
     __tablename__ = 'users'
 
@@ -38,7 +27,7 @@ class User(UserMixin, db.Model):
     username      = db.Column(db.String(80),  unique=True, nullable=False)
     email         = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
-    # role controls what actions the user can perform (RBAC)
+    # role controls what actions the user can perform
     role          = db.Column(db.String(20),  nullable=False, default='viewer')
     business_area = db.Column(db.String(100), nullable=True)
     created_at    = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
@@ -56,7 +45,7 @@ class User(UserMixin, db.Model):
         """Verify a candidate password against the stored hash."""
         return check_password_hash(self.password_hash, password)
 
-    # Role-checking helpers used by route decorators
+    # Role-checking helpers
     def is_admin(self) -> bool:
         return self.role == 'admin'
 
@@ -67,9 +56,8 @@ class User(UserMixin, db.Model):
         return f'<User {self.username} [{self.role}]>'
 
 
-# ---------------------------------------------------------------------------
 # Employee model
-# ---------------------------------------------------------------------------
+
 class Employee(db.Model):
     """Tracks talent within the organisation."""
     __tablename__ = 'employees'
@@ -100,11 +88,10 @@ class Employee(db.Model):
         return f'<Employee {self.employee_number} – {self.full_name}>'
 
 
-# ---------------------------------------------------------------------------
+
 # Project model
-# ---------------------------------------------------------------------------
+
 class Project(db.Model):
-    """Represents an internal automation project."""
     __tablename__ = 'projects'
 
     id           = db.Column(db.Integer, primary_key=True)
@@ -125,13 +112,12 @@ class Project(db.Model):
         return f'<Project {self.project_name}>'
 
 
-# ---------------------------------------------------------------------------
-# Allocation model  (Employee ↔ Project junction with extra fields)
-# ---------------------------------------------------------------------------
+# Allocation model
+
 class Allocation(db.Model):
     """
     Links an Employee to a Project with a role and percentage allocation.
-    allocation_percentage is validated at the form level (0–100).
+    
     """
     __tablename__ = 'allocations'
 
@@ -149,9 +135,8 @@ class Allocation(db.Model):
         return f'<Allocation emp={self.employee_id} proj={self.project_id} {self.allocation_percentage}%>'
 
 
-# ---------------------------------------------------------------------------
 # TalentReview model
-# ---------------------------------------------------------------------------
+
 class TalentReview(db.Model):
     """Records a performance/potential review and development action for an employee."""
     __tablename__ = 'talent_reviews'
@@ -172,13 +157,12 @@ class TalentReview(db.Model):
         return f'<TalentReview emp={self.employee_id} [{self.status}]>'
 
 
-# ---------------------------------------------------------------------------
+
 # AuditLog model
-# ---------------------------------------------------------------------------
+
 class AuditLog(db.Model):
     """
     Immutable audit trail of all create/update/delete actions.
-    Accessible only by admins — supports accountability and forensic review.
     """
     __tablename__ = 'audit_logs'
 

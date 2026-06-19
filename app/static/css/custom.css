@@ -17,7 +17,7 @@ main.container {
   border-bottom: 2px solid rgba(255,255,255,0.7);
 }
 
-/* Card hover lift on dashboard */
+/* Card hover lift */
 .card {
   transition: box-shadow 0.2s ease;
 }
@@ -36,7 +36,7 @@ main.container {
   font-weight: 600;
 }
 
-/* Alert auto-dismiss animation */
+/* Alert dismiss animation */
 .alert {
   animation: fadeIn 0.3s ease;
 }

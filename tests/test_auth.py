@@ -1,11 +1,6 @@
 """
 tests/test_auth.py — Authentication tests.
 
-Covers:
-  - valid login succeeds and redirects to dashboard
-  - invalid password fails
-  - invalid email fails
-  - logout redirects to login page
 """
 
 from tests.conftest import login, logout
@@ -25,7 +20,7 @@ class TestLogin:
         resp = login(client, 'admin@test.com', 'WrongPassword!')
         assert resp.status_code == 200
         assert b'Invalid email or password' in resp.data
-        # Should NOT be on the dashboard
+        # Shouldn't be on the dashboard
         assert b'Total Employees' not in resp.data
 
     def test_invalid_email_fails(self, client, seed_users):

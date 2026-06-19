@@ -1,8 +1,6 @@
 """
 app/routes/dashboard.py — Dashboard with summary cards and Chart.js data.
 
-All data is fetched via SQLAlchemy ORM — no raw SQL (OWASP A03 mitigation).
-Login is required for every route in this blueprint.
 """
 
 from flask import Blueprint, render_template, jsonify
@@ -18,7 +16,7 @@ dashboard_bp = Blueprint('dashboard', __name__)
 @dashboard_bp.route('/dashboard')
 @login_required
 def index():
-    """Main dashboard with KPI cards including overallocation alert."""
+    """Main dashboard with KPI cards ."""
 
     total_employees = Employee.query.count()
     active_projects = Project.query.filter_by(status='Active').count()
@@ -31,7 +29,7 @@ def index():
     ).scalar()
     avg_alloc = avg_alloc_result or 0
 
-    # Overallocation: employees whose total allocation across all projects > 100%
+    # Overallocation: employees whose total allocation across all projects are over 100%
     overallocated = (
         db.session.query(Employee.full_name, func.sum(Allocation.allocation_percentage).label('total'))
         .join(Allocation, Allocation.employee_id == Employee.id)
@@ -55,9 +53,6 @@ def index():
     )
 
 
-# ---------------------------------------------------------------------------
-# Chart data API endpoints — JSON consumed by Chart.js in the browser.
-# ---------------------------------------------------------------------------
 
 @dashboard_bp.route('/dashboard/chart/business-area')
 @login_required

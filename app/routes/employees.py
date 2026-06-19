@@ -1,10 +1,6 @@
 """
 app/routes/employees.py — Employee CRUD routes.
 
-Access control (OWASP A01: Broken Access Control):
-  - Viewing: all authenticated users
-  - Add / Edit: admin or manager
-  - Delete: admin only
 
 Audit log entries are written on every mutating action.
 """
@@ -60,7 +56,7 @@ def add():
             flight_risk=form.flight_risk.data,
         )
         db.session.add(employee)
-        db.session.flush()  # Get the new ID before committing
+        db.session.flush()  # Gets the new ID before committing
 
         log = AuditLog(
             user_id=current_user.id,

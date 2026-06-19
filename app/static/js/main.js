@@ -1,8 +1,8 @@
-/* main.js — Global client-side helpers for Talent Portal */
+/* main.js — Global helpers for Talent Portal */
 
 'use strict';
 
-// Auto-dismiss flash alerts after 5 seconds
+//dismiss flash alerts after 5 seconds
 document.addEventListener('DOMContentLoaded', function () {
   const alerts = document.querySelectorAll('.alert.alert-dismissible');
   alerts.forEach(function (alert) {

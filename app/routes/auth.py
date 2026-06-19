@@ -1,13 +1,5 @@
 """
 app/routes/auth.py — Authentication routes: login, logout, register.
-
-Security notes:
-  - Passwords are verified with Werkzeug's check_password_hash — plain text
-    is never compared or stored (OWASP A02: Cryptographic Failures).
-  - Flask-Login manages the session cookie securely.
-  - CSRF token is validated automatically by Flask-WTF on POST.
-  - A generic error message is shown on failed login to avoid leaking
-    whether an email address is registered (OWASP A07: Auth Failures).
 """
 
 from urllib.parse import urlparse, urljoin
@@ -23,13 +15,6 @@ auth_bp = Blueprint('auth', __name__)
 
 
 def _is_safe_redirect(target: str) -> bool:
-    """
-    SECURITY — Open Redirect (OWASP A01):
-    Ensure the 'next' redirect target is on the same host.
-    An attacker can craft /login?next=http://evil.com — without this
-    check the user would be sent to an external site after logging in.
-    We only allow relative paths on our own domain.
-    """
     ref  = urlparse(request.host_url)
     test = urlparse(urljoin(request.host_url, target))
     return test.scheme in ('http', 'https') and ref.netloc == test.netloc
@@ -50,20 +35,20 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        # SECURITY: Query by email using the ORM — parameterised, no raw SQL.
+        # Security: Query by email using the ORM — no raw SQL.
         user = User.query.filter_by(email=form.email.data.lower().strip()).first()
 
-        # SECURITY: Always check hash — never compare plain text passwords.
+        # Security: Always check hash — never compare plain text passwords.
         if user and user.check_password(form.password.data):
             login_user(user)
             flash(f'Welcome back, {user.username}! You are logged in as {user.role}.', 'success')
-            # SECURITY: Validate 'next' before redirecting — prevents open redirect.
+            # Security: Validate before redirecting — prevents open redirect.
             next_page = request.args.get('next')
             if not next_page or not _is_safe_redirect(next_page):
                 next_page = url_for('dashboard.index')
             return redirect(next_page)
         else:
-            # SECURITY: Generic message avoids confirming whether the email exists.
+            # Security: Generic message avoids confirming whether the email exists.
             flash('Invalid email or password. Please try again.', 'danger')
 
     return render_template('auth/login.html', form=form, title='Log In')
@@ -81,9 +66,7 @@ def logout():
 @login_required
 def register():
     """
-    Create a new user account.  Restricted to admin users only — this
-    prevents self-registration which could be exploited to escalate
-    privileges (OWASP A01: Broken Access Control).
+    Create a new user account.  Restricted to admin users only.
     """
     if not current_user.is_admin():
         flash('Access denied: admin only.', 'danger')

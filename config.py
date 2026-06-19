@@ -1,27 +1,20 @@
 """
 config.py — Application configuration classes.
 
-Loads sensitive values from environment variables so that secrets are
-never hard-coded in source code (OWASP A02: Cryptographic Failures /
-A05: Security Misconfiguration mitigation).
 """
 
 import os
 from dotenv import load_dotenv
 
-# Load .env file if present (local development only)
+# Load .env file if present
 load_dotenv()
 
 
 class Config:
     """Base configuration shared by all environments."""
 
-    # SECRET_KEY is used by Flask-WTF for CSRF token signing and by
-    # Flask-Login for session cookies.  A missing env var falls back to a
-    # development default — production deployments MUST set this.
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-fallback-secret-change-in-prod')
 
-    # SQLAlchemy — defaults to a local SQLite file for development.
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL', 'sqlite:///talent_portal.db'
     )
@@ -45,11 +38,11 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-    """Production settings — DEBUG must be off."""
+    """Production settings"""
     DEBUG = False
 
 
-# Mapping used by the app factory to select a config by name
+# Mapping used by the app factory.
 config_map = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,

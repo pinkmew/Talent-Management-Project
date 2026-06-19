@@ -1,8 +1,5 @@
 """
 tests/test_crud.py — CRUD operation tests.
-
-Verifies that create, read, update, and delete operations work correctly
-for employees, projects, and allocations when called by an admin user.
 """
 
 from datetime import date

@@ -1,11 +1,5 @@
 """
 app/routes/admin.py — Admin panel and audit log.
-
-SECURITY (OWASP A01: Broken Access Control):
-Every route here is protected by @admin_required.  If a non-admin user
-manually navigates to /admin they receive an HTTP 403 response with a
-clear "access denied" flash message — they are NOT silently redirected
-or shown an empty page, which could mask the access control failure.
 """
 
 from flask import Blueprint, render_template, flash, redirect, url_for

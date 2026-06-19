@@ -1,8 +1,6 @@
 """
 run.py — Application entry point.
 
-Run locally with:  python run.py
-Deploy on Heroku/Render via:  gunicorn run:app
 """
 
 import os

@@ -1,16 +1,6 @@
 """
 seed.py — Populate the database with realistic sample data.
 
-Run once after first setup:
-    python seed.py
-
-Creates:
-  - 3 users  (admin, manager, viewer)
-  - 10 employees
-  - 4 projects
-  - 8 allocations
-  - 6 talent reviews
-  - 6 audit log entries
 """
 
 from datetime import date, datetime, timezone
@@ -20,13 +10,13 @@ from app.models import User, Employee, Project, Allocation, TalentReview, AuditL
 app = create_app('development')
 
 with app.app_context():
-    # Clear existing data (safe for development re-seeds)
+    # Clear existing data
     db.drop_all()
     db.create_all()
 
-    # ------------------------------------------------------------------
+    
     # Users
-    # ------------------------------------------------------------------
+    
     admin = User(username='admin', email='admin@example.com',
                  role='admin', business_area='Digital Automation')
     admin.set_password('Password123!')
@@ -42,10 +32,10 @@ with app.app_context():
     db.session.add_all([admin, manager, viewer])
     db.session.commit()
 
-    # ------------------------------------------------------------------
+    
     # Employees (10)
-    # ------------------------------------------------------------------
-    # Columns: emp_no, name, area, role, grade, segment, aspiration, readiness, flight_risk
+    
+    # Columns:
     employees_data = [
         ('FJ001', 'Alice Pemberton',  'Digital Automation',   'RPA Developer',        'Senior Consultant', 'High Potential',   'Automation Lead',   'Ready in 1-2 Years', 'Low'),
         ('FJ002', 'Ben Okafor',       'Application Services', 'Java Developer',        'Consultant',        'Strong Performer', 'Senior Developer',  'Ready in 1-2 Years', 'Medium'),
@@ -93,9 +83,9 @@ with app.app_context():
     emp = {e.employee_number: e for e in employees}
     proj = {p.project_name: p for p in projects}
 
-    # ------------------------------------------------------------------
+    
     # Allocations (8)
-    # ------------------------------------------------------------------
+    
     alloc_data = [
         (emp['FJ001'], proj['RPA Process Automation'],  'Lead Developer',     80, date(2024, 1, 15), date(2024, 12, 31)),
         (emp['FJ002'], proj['Cloud Migration Wave 2'],  'Backend Developer',  60, date(2024, 3, 1),  date(2025, 6, 30)),
@@ -115,9 +105,9 @@ with app.app_context():
         db.session.add(a)
     db.session.commit()
 
-    # ------------------------------------------------------------------
+    
     # Talent Reviews (6)
-    # ------------------------------------------------------------------
+    
     review_data = [
         (emp['FJ001'], admin.id,   date(2024, 3, 15), 'Exceptional',          'High',   'Complete development plan for Automation Lead role. Enrol in leadership programme.', 'In Progress'),
         (emp['FJ003'], admin.id,   date(2024, 4, 20), 'Exceeds Expectations', 'High',   'Complete AWS Solutions Architect Professional certification by Q3 2024.',             'Open'),
@@ -136,9 +126,9 @@ with app.app_context():
         db.session.add(r)
     db.session.commit()
 
-    # ------------------------------------------------------------------
-    # Audit log entries (6 — seeded to show history)
-    # ------------------------------------------------------------------
+    
+    # Audit log entries
+    
     audit_entries = [
         (admin.id,   'CREATE', 'employees', emp['FJ001'].id, 'Seeded employee Alice Pemberton (FJ001)'),
         (admin.id,   'CREATE', 'projects',  proj['RPA Process Automation'].id, 'Seeded project: RPA Process Automation'),

@@ -1,9 +1,6 @@
 """
 app/routes/reviews.py — Talent Review CRUD routes.
 
-Access control:
-  - Viewing: all authenticated users
-  - Add / Edit / Close: admin or manager
 """
 
 from flask import Blueprint, render_template, redirect, url_for, flash

@@ -22,7 +22,6 @@ def app():
 def db(app):
     """
     Provide a clean database for each test.
-    Creates all tables before the test and drops them after.
     """
     with app.app_context():
         _db.create_all()
@@ -92,7 +91,6 @@ def seed_project(db, app):
 
 
 def login(client, email, password):
-    """Helper: POST to /login and return the response."""
     return client.post('/login', data={'email': email, 'password': password},
                        follow_redirects=True)
 

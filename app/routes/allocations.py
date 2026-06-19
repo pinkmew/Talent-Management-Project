@@ -1,10 +1,6 @@
 """
 app/routes/allocations.py — Allocation CRUD routes.
 
-Access control:
-  - Viewing: all authenticated users
-  - Add / Edit: admin or manager
-  - Delete: admin only
 """
 
 from flask import Blueprint, render_template, redirect, url_for, flash

@@ -1,9 +1,6 @@
 """
 app/routes/projects.py — Project CRUD routes.
 
-Access control:
-  - Viewing: all authenticated users
-  - Add / Edit / Delete: admin only
 """
 
 from flask import Blueprint, render_template, redirect, url_for, flash

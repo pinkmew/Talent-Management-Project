@@ -1,13 +1,5 @@
 """
 app/forms.py — Flask-WTF form definitions.
-
-Every form rendered by the app is defined here with:
-  - Field-level validators (required, length, range, choice)
-  - CSRF token included automatically by FlaskForm (OWASP A01 mitigation)
-  - User-friendly error messages for each constraint
-
-OWASP A03 (Injection) mitigation: validated data is passed to the ORM,
-never concatenated into raw SQL.
 """
 
 from flask_wtf import FlaskForm
@@ -20,11 +12,6 @@ from wtforms.validators import (
     Optional, ValidationError
 )
 
-
-# ---------------------------------------------------------------------------
-# Shared choice lists — using controlled vocabularies prevents injection of
-# arbitrary data into sensitive classification fields.
-# ---------------------------------------------------------------------------
 
 TALENT_SEGMENT_CHOICES = [
     ('', '-- Select --'),
@@ -97,9 +84,8 @@ ROLE_CHOICES = [
 ]
 
 
-# ---------------------------------------------------------------------------
 # Authentication forms
-# ---------------------------------------------------------------------------
+
 
 class LoginForm(FlaskForm):
     """Login — email + password."""
@@ -150,9 +136,8 @@ class RegisterForm(FlaskForm):
             raise ValidationError('Password must contain at least one special character (e.g. ! @ # $).')
 
 
-# ---------------------------------------------------------------------------
 # Employee forms
-# ---------------------------------------------------------------------------
+
 
 class EmployeeForm(FlaskForm):
     """Add / Edit an employee record."""
@@ -187,9 +172,9 @@ class EmployeeForm(FlaskForm):
     submit                 = SubmitField('Save Employee')
 
 
-# ---------------------------------------------------------------------------
+
 # Project forms
-# ---------------------------------------------------------------------------
+
 
 class ProjectForm(FlaskForm):
     """Add / Edit a project."""
@@ -215,9 +200,9 @@ class ProjectForm(FlaskForm):
             raise ValidationError('End date must be on or after the start date.')
 
 
-# ---------------------------------------------------------------------------
+
 # Allocation forms
-# ---------------------------------------------------------------------------
+
 
 class AllocationForm(FlaskForm):
     """Assign an employee to a project."""
@@ -231,8 +216,7 @@ class AllocationForm(FlaskForm):
         DataRequired(message='Assigned role is required.'),
         Length(max=100)
     ])
-    # SECURITY / VALIDATION: allocation percentage must be 0–100.
-    # Values outside this range are rejected before reaching the database.
+    # allocation percentage must be 0–100.
     allocation_percentage = IntegerField('Allocation %', validators=[
         DataRequired(message='Allocation percentage is required.'),
         NumberRange(min=0, max=100,
@@ -249,9 +233,7 @@ class AllocationForm(FlaskForm):
             raise ValidationError('End date must be on or after the start date.')
 
 
-# ---------------------------------------------------------------------------
 # Talent Review forms
-# ---------------------------------------------------------------------------
 
 class TalentReviewForm(FlaskForm):
     """Create / Edit a talent review."""
