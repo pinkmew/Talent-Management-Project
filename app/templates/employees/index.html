@@ -9,6 +9,18 @@
   {% endif %}
 </div>
 
+<form method="GET" class="mb-3 d-flex gap-2 flex-wrap">
+  <input type="search" name="q" class="form-control form-control-sm" placeholder="Search by name…" value="{{ search_query }}" style="max-width:260px;">
+  <select name="risk" class="form-select form-select-sm" style="max-width:160px;">
+    <option value="">All Flight Risks</option>
+    {% for level in ['Low','Medium','High'] %}
+    <option value="{{ level }}" {{ 'selected' if risk_filter == level }}>{{ level }} Risk</option>
+    {% endfor %}
+  </select>
+  <button class="btn btn-sm btn-outline-secondary" type="submit">Filter</button>
+  {% if search_query or risk_filter %}<a href="{{ url_for('employees.index') }}" class="btn btn-sm btn-outline-danger">Clear</a>{% endif %}
+</form>
+
 <div class="card border-0 shadow-sm">
   <div class="card-body p-0">
     <div class="table-responsive">
@@ -84,7 +96,6 @@
                     <div class="modal-footer">
                       <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
                       <form method="POST" action="{{ url_for('employees.delete', employee_id=emp.id) }}">
-                        {{ csrf_token() | safe if csrf_token is defined else '' }}
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                       </form>

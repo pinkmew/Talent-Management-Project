@@ -24,7 +24,13 @@ def index():
         .order_by(TalentReview.review_date.desc())
         .all()
     )
-    return render_template('reviews/index.html', reviews=reviews, title='Talent Reviews')
+    status_counts = {
+        'Open':        TalentReview.query.filter_by(status='Open').count(),
+        'In Progress': TalentReview.query.filter_by(status='In Progress').count(),
+        'Complete':    TalentReview.query.filter_by(status='Complete').count(),
+    }
+    return render_template('reviews/index.html', reviews=reviews,
+                           status_counts=status_counts, title='Talent Reviews')
 
 
 @reviews_bp.route('/reviews/add/<int:employee_id>', methods=['GET', 'POST'])

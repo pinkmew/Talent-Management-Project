@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
 
 
-# User loader
+@login_manager.user_loader
 def load_user(user_id: int):
     return User.query.get(int(user_id))
 

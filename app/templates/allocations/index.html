@@ -28,9 +28,10 @@
             <td>{{ a.project.project_name }}</td>
             <td>{{ a.assigned_role }}</td>
             <td>
+              {% set bar_colour = 'danger' if a.allocation_percentage == 100 else ('warning' if a.allocation_percentage >= 80 else ('primary' if a.allocation_percentage >= 50 else 'success')) %}
               <div class="d-flex align-items-center gap-2">
                 <div class="progress flex-grow-1" style="height:14px;">
-                  <div class="progress-bar bg-primary" style="width:{{ a.allocation_percentage }}%"></div>
+                  <div class="progress-bar bg-{{ bar_colour }}" style="width:{{ a.allocation_percentage }}%"></div>
                 </div>
                 <span class="small fw-semibold">{{ a.allocation_percentage }}%</span>
               </div>
