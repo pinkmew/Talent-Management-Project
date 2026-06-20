@@ -79,7 +79,17 @@ def create_app(config_name: str = 'default') -> Flask:
         )
         return response
 
-    # Create all database tables if not existent 
+    from flask import render_template as rt
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return rt('errors/404.html'), 404
+
+    @app.errorhandler(403)
+    def forbidden(e):
+        return rt('errors/403.html'), 403
+
+    # Create all database tables if not existent
     with app.app_context():
         db.create_all()
 
