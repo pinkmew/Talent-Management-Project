@@ -27,11 +27,13 @@
         </div>
         <div class="col-md-2">
           {{ form.start_date.label(class="form-label") }}
-          {{ form.start_date(class="form-control") }}
+          {{ form.start_date(class="form-control" + (" is-invalid" if form.start_date.errors else "")) }}
+          {% for e in form.start_date.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
         </div>
         <div class="col-md-2">
           {{ form.end_date.label(class="form-label") }}
-          {{ form.end_date(class="form-control") }}
+          {{ form.end_date(class="form-control" + (" is-invalid" if form.end_date.errors else "")) }}
+          {% for e in form.end_date.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
         </div>
       </div>
       <div class="mt-4 d-flex gap-2">

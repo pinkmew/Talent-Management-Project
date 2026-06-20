@@ -226,7 +226,7 @@ async function loadChart(canvasId, endpoint, type, opts = {}) {
     },
     options: {
       responsive: true,
-      plugins: { legend: { position: type === 'bar' ? 'top' : 'right' } },
+      plugins: { legend: type === 'bar' ? { display: false } : { position: 'right' } },
       scales: type === 'bar' ? {
         y: { beginAtZero: true, ticks: { stepSize: 1 } },
         x: { ticks: { maxRotation: 30 } }
