@@ -21,11 +21,15 @@ employees_bp = Blueprint('employees', __name__)
 @login_required
 def index():
     q = request.args.get('q', '').strip()
+    risk_filter = request.args.get('risk', '').strip()
     query = Employee.query.order_by(Employee.full_name)
     if q:
         query = query.filter(Employee.full_name.ilike(f'%{q}%'))
+    if risk_filter in ('Low', 'Medium', 'High'):
+        query = query.filter(Employee.flight_risk == risk_filter)
     employees = query.all()
-    return render_template('employees/index.html', employees=employees, title='Employees', search_query=q)
+    return render_template('employees/index.html', employees=employees,
+                           title='Employees', search_query=q, risk_filter=risk_filter)
 
 
 @employees_bp.route('/employees/<int:employee_id>')
