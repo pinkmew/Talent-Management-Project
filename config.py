@@ -20,7 +20,8 @@ class Config:
     if _db_url.startswith('postgres://'):
         _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
     SQLALCHEMY_DATABASE_URI = _db_url
-    SQLALCHEMY_TRACK_MODIFICATIONS = False  # Suppresses deprecation warning
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {'pool_pre_ping': True}
 
     # Flask-WTF CSRF protection is enabled globally.
     WTF_CSRF_ENABLED = True

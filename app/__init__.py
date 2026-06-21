@@ -98,7 +98,11 @@ def create_app(config_name: str = 'default') -> Flask:
 
 
 def _auto_seed_if_empty():
+    from sqlalchemy.exc import IntegrityError
     from app.models import User
     if User.query.count() == 0:
-        from app.seed_data import seed_demo_data
-        seed_demo_data(db)
+        try:
+            from app.seed_data import seed_demo_data
+            seed_demo_data(db)
+        except IntegrityError:
+            db.session.rollback()
