@@ -89,8 +89,16 @@ def create_app(config_name: str = 'default') -> Flask:
     def forbidden(e):
         return rt('errors/403.html'), 403
 
-    # Create all database tables if not existent
     with app.app_context():
         db.create_all()
+        if not app.config.get('TESTING'):
+            _auto_seed_if_empty()
 
     return app
+
+
+def _auto_seed_if_empty():
+    from app.models import User
+    if User.query.count() == 0:
+        from app.seed_data import seed_demo_data
+        seed_demo_data(db)
